@@ -72,6 +72,12 @@
         al.rel = "apple-touch-icon";
         al.href = i192;
         document.head.appendChild(al);
+        
+        const fav = document.createElement("link");
+        fav.rel = "icon";
+        fav.href = i192;
+        document.head.appendChild(fav);
+        
         if ("serviceWorker" in navigator) {
           const CACHE = "patho-v4";
           const swCode = `const CACHE='${CACHE}';const SELF_URL=self.location.href;
