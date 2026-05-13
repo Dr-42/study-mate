@@ -1327,74 +1327,116 @@ self.addEventListener('fetch',e=>{if(e.request.mode==='navigate'){e.respondWith(
     opacity: 1;
   }
 
-  /* ═══════════════════════════════════════════════════
-     KNOWLEDGE WEB — VISUAL WEB (replaces table)
+/* ═══════════════════════════════════════════════════
+     SOULSLIKE KNOWLEDGE WEB THEME
      ═══════════════════════════════════════════════════ */
   .kw-page {
     flex: 1;
     overflow: auto;
-    padding: 18px;
+    padding: 24px;
     overscroll-behavior: contain;
+    background: radial-gradient(circle at top, #1a1a24 0%, #050508 100%);
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
   }
   .kw-inner {
     max-width: 900px;
     margin: 0 auto;
   }
   .kw-header {
-    margin-bottom: 16px;
+    margin-bottom: 40px;
+    text-align: center;
   }
   .kw-header h2 {
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: var(--cyan);
-    margin-bottom: 4px;
+    font-size: 1.3rem;
+    color: #d4af37;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    margin-bottom: 8px;
+    font-family: inherit;
   }
   .kw-header p {
-    font-size: 0.75rem;
-    color: var(--text-dim);
+    font-size: 0.85rem;
+    color: #888;
+    font-style: italic;
   }
-
-  /* Domain → Organ connection grid — visual card format */
   .kw-domain-section {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 60px;
+    position: relative;
   }
   .kw-domain-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: 800;
-    color: white;
-    margin-bottom: 10px;
+    background: #0a0a0c;
+    border: 1px solid #444;
+    box-shadow: inset 0 0 10px #000, 0 0 15px rgba(0,0,0,0.8);
+    clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
+    padding: 14px 45px;
+    color: #d4af37 !important;
+    font-size: 1.15rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    z-index: 2;
+    transition: all 0.3s;
+  }
+  .kw-domain-label:hover {
+    border-color: #d4af37;
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
   }
   .kw-organs-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    justify-content: center;
+    gap: 16px;
+    max-width: 800px;
+    margin-top: -12px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(212, 175, 55, 0.15);
+    position: relative;
   }
   .kw-organ-tag {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.72rem;
-    font-weight: 600;
+    background: #111;
+    border: 1px solid #333 !important;
+    color: #666 !important;
+    padding: 8px 18px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
     cursor: pointer;
-    transition: all 0.15s;
-    user-select: none;
-    border: 1.5px solid transparent;
+    position: relative;
+    border-radius: 3px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .kw-organ-tag::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    width: 1px;
+    height: 30px;
+    background: linear-gradient(to bottom, rgba(212,175,55,0.15), transparent);
+    z-index: -1;
   }
   .kw-organ-tag.on {
-    color: white;
+    background: #1a1505 !important;
+    border-color: #d4af37 !important;
+    color: #ffeb99 !important;
+    box-shadow: inset 0 0 15px rgba(212,175,55,0.1), 0 0 10px rgba(212,175,55,0.2);
+    text-shadow: 0 0 6px rgba(255,235,153,0.4);
   }
-  .kw-organ-tag.off {
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text-muted);
-    border-color: transparent;
+  .kw-organ-tag.on::before {
+    background: linear-gradient(to bottom, rgba(212,175,55,0.6), transparent);
+    box-shadow: 0 0 5px rgba(212,175,55,0.4);
   }
-  .kw-organ-tag.off:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text);
+  .kw-organ-tag:hover {
+    transform: translateY(-2px);
+    border-color: #888 !important;
+  }
+  .kw-organ-tag.on:hover {
+    border-color: #ffeb99 !important;
+    box-shadow: inset 0 0 20px rgba(212,175,55,0.3), 0 0 15px rgba(212,175,55,0.4);
   }
 
   /* ═══════════════════════════════════════════════════
@@ -3320,32 +3362,13 @@ self.addEventListener('fetch',e=>{if(e.request.mode==='navigate'){e.respondWith(
       // ════════════════════════════════════════════════════════════════
       // DOMAIN CONFIG — FIXED (no duplicate Domain I)
       // ════════════════════════════════════════════════════════════════
-      const DC = {
-        "Domain I – Lab Tech": {
-          color: "#4dabf7",
-          icon: "🔬",
-          source: "Bancroft + Dacie",
-        },
-        "Domain II – RBC/Coag": {
-          color: "#39d353",
-          icon: "🩸",
-          source: "Hoffbrand",
-        },
-        "Domain III – Surgical": {
-          color: "#ff9500",
-          icon: "🔪",
-          source: "Gattuso",
-        },
-        "Domain IV – WHO": {
-          color: "#b88aff",
-          icon: "📚",
-          source: "WHO Classification",
-        },
-        "Domain V – Cytopathology": {
-          color: "#ff6b9d",
-          icon: "🧫",
-          source: "Cyto Systems",
-        },
+const DC = {
+        "Domain I – Lab Tech":      { color: "#4dabf7", icon: "🔬", source: "Bancroft + Dacie" },
+        "Domain II – RBC/Coag":     { color: "#39d353", icon: "🩸", source: "Hoffbrand" },
+        "Domain III – Surgical":    { color: "#ff9500", icon: "🔪", source: "Gattuso" },
+        "Domain IV – WHO":          { color: "#b88aff", icon: "📚", source: "WHO Classification" },
+        "Domain IV – WHO 5th Ed":   { color: "#b88aff", icon: "📚", source: "WHO Classification" }, // Failsafe alias
+        "Domain V – Cytopathology": { color: "#ff6b9d", icon: "🧫", source: "Cyto Systems" },
       };
       const DOMAINS = Object.keys(DC);
 
@@ -4106,8 +4129,8 @@ self.addEventListener('fetch',e=>{if(e.request.mode==='navigate'){e.respondWith(
             }
             bd.mods[r.module].push({ ...r, e });
           });
-          groups.forEach((g) => {
-            const cfg = DC[g.d.domain] || { color: "#666" };
+groups.forEach((g) => {
+            const cfg = DC[g.d.domain] || { color: "#666", icon: "❖" };
             const bh = document.createElement("div");
             bh.className = "book-section-hdr";
             bh.style.backgroundColor = "var(--bg)";
@@ -4427,23 +4450,20 @@ self.addEventListener('fetch',e=>{if(e.request.mode==='navigate'){e.respondWith(
           KWD.forEach((dom) => {
             const section = document.createElement("div");
             section.className = "kw-domain-section";
-            const label = document.createElement("div");
-            label.className = "kw-domain-label";
-            label.style.cssText = `background:${dom.color}22;color:${dom.color};border:1px solid ${dom.color}44`;
-            label.innerHTML = `${DC[dom.domain]?.icon || "•"} ${dom.label}`;
-            section.appendChild(label);
-            const grid = document.createElement("div");
-            grid.className = "kw-organs-grid";
-            ORGANS.forEach((organ, ci) => {
-              const key = dom.key + ":" + ci;
-              const on = kwD.hasOwnProperty(key)
-                ? kwD[key]
-                : (DKW[dom.key] || []).includes(ci);
-              const tag = document.createElement("div");
-              tag.className = "kw-organ-tag " + (on ? "on" : "off");
-              if (on)
-                tag.style.cssText = `background:${dom.color}22;color:${dom.color};border-color:${dom.color}55`;
-              tag.textContent = organ;
+const label = document.createElement("div");
+          label.className = "kw-domain-label";
+          label.innerHTML = `<span style="opacity:0.8; margin-right:8px">${DC[dom.domain]?.icon || "❖"}</span> ${dom.label}`;
+          section.appendChild(label);
+          const grid = document.createElement("div");
+          grid.className = "kw-organs-grid";
+          ORGANS.forEach((organ, ci) => {
+            const key = dom.key + ":" + ci;
+            const on = kwD.hasOwnProperty(key)
+              ? kwD[key]
+              : (DKW[dom.key] || []).includes(ci);
+            const tag = document.createElement("div");
+            tag.className = "kw-organ-tag " + (on ? "on" : "off");
+            tag.textContent = organ;
               tag.addEventListener("click", () => {
                 kwD[key] = !on;
                 saveKW();
