@@ -9,7 +9,16 @@
 <meta name="apple-mobile-web-app-title" content="Patho Tracker">
 <meta name="theme-color" content="#0D1B2A">
 <title>🧬 INI-SS Pathology Tracker</title>
-<link id="pwa-manifest" rel="manifest">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(err => console.error('SW registration failed:', err));
+    });
+  }
+</script>
 <style>
 :root {
   --navy:#0D1B2A; --indigo:#1B4F72; --violet:#6C3483; --teal:#0E6655;
