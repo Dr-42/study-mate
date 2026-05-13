@@ -1574,29 +1574,61 @@ function renderKW(){
 // ══════════════════════════════════════════════════════════════════
 // IO
 // ══════════════════════════════════════════════════════════════════
-document.getElementById('export-btn').addEventListener('click',()=>{
-  const blob=new Blob([JSON.stringify({version:3,exported:new Date().toISOString(),progress:P,kwData:kwD,streak:streakD},null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download=`ini_ss_progress_${todayStr()}.json`;a.click();URL.revokeObjectURL(a.href);
+document.getElementById('export-btn').addEventListener('click', async () => {
+  // 1. Fetch all annotations from IndexedDB
+  const allAnnots = await idbGetAll(IDB_ANNOTS);
+  
+  // 2. Package everything into the payload
+  const blob = new Blob([JSON.stringify({
+    version: 4, 
+    exported: new Date().toISOString(),
+    progress: P,
+    kwData: kwD,
+    streak: streakD,
+    annotations: allAnnots // Injecting the book data
+  }, null, 2)], {type: 'application/json'});
+  
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `ini_ss_progress_${todayStr()}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 });
-document.getElementById('import-btn').addEventListener('click',()=>document.getElementById('import-file').click());
-document.getElementById('import-file').addEventListener('change',ev=>{
-  const file=ev.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    try{
-      const d=JSON.parse(e.target.result);
-      if(d.progress)Object.assign(P,d.progress);
-      if(d.kwData)Object.assign(kwD,d.kwData);
-      if(d.streak)Object.assign(streakD,d.streak);
-      save();saveKW();saveStreak();
-      const n=Object.keys(d.progress||{}).length;
-      document.getElementById('import-status').style.display='block';
-      document.getElementById('import-status').textContent=`✓ Imported ${n} topic records.`;
-      renderTopicList();renderDashboard();updateStorageInfo();
-      toast(`Imported ${n} records`);
-    }catch(err){alert('Import failed: invalid JSON.');}
-    ev.target.value='';
+
+document.getElementById('import-btn').addEventListener('click', () => document.getElementById('import-file').click());
+
+document.getElementById('import-file').addEventListener('change', ev => {
+  const file = ev.target.files[0]; 
+  if (!file) return;
+  const reader = new FileReader();
+  
+  // Note the 'async e =>' here
+  reader.onload = async e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (d.progress) Object.assign(P, d.progress);
+      if (d.kwData) Object.assign(kwD, d.kwData);
+      if (d.streak) Object.assign(streakD, d.streak);
+      save(); saveKW(); saveStreak();
+      
+      // 3. Restore annotations back to IndexedDB
+      let annotCount = 0;
+      if (d.annotations && Array.isArray(d.annotations)) {
+        for (const a of d.annotations) {
+          await idbPut(IDB_ANNOTS, a);
+          annotCount++;
+        }
+      }
+
+      const n = Object.keys(d.progress || {}).length;
+      document.getElementById('import-status').style.display = 'block';
+      document.getElementById('import-status').textContent = `✓ Imported ${n} topics & ${annotCount} annotation pages.`;
+      renderTopicList(); renderDashboard(); updateStorageInfo();
+      toast(`Imported successfully`);
+    } catch(err) {
+      alert('Import failed: invalid JSON.');
+    }
+    ev.target.value = '';
   };
   reader.readAsText(file);
 });
@@ -2059,19 +2091,17 @@ let _pendingNote = null;
 function setupAnnotationEvents(canvas, page) {
   const getPos = e => {
     const rect = canvas.getBoundingClientRect();
-    const src = e.touches ? e.touches[0] : e;
-    return {
-      x: (src.clientX - rect.left),
-      y: (src.clientY - rect.top)
-    };
+    // PointerEvents unify touch, mouse, and stylus into standard clientX/Y
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   };
 
-  // Highlight drag state
   let hlDrag = null;
 
   const onDown = e => {
     if (reader.tool === 'select') return;
     e.preventDefault();
+    canvas.setPointerCapture(e.pointerId); // Locks the S-Pen to the canvas
+
     const pos = getPos(e);
 
     if (reader.tool === 'highlight') {
@@ -2096,7 +2126,6 @@ function setupAnnotationEvents(canvas, page) {
     const pos = getPos(e);
 
     if (reader.tool === 'highlight' && hlDrag) {
-      // Draw live preview
       const pc = reader.pageContainers[page];
       if (!pc) return;
       drawAnnotations(page);
@@ -2112,7 +2141,6 @@ function setupAnnotationEvents(canvas, page) {
 
     if ((reader.tool === 'pen' || reader.tool === 'eraser') && reader.drawing) {
       reader.currentStroke.push({x: pos.x, y: pos.y});
-      // Draw incremental stroke
       const pc = reader.pageContainers[page];
       if (!pc) return;
       const {ctx, dpr} = pc;
@@ -2133,7 +2161,8 @@ function setupAnnotationEvents(canvas, page) {
 
   const onUp = async e => {
     if (reader.tool === 'select') return;
-    const pos = e.changedTouches ? getPos({touches: e.changedTouches}) : (e.type === 'mouseup' ? getPos(e) : null);
+    canvas.releasePointerCapture(e.pointerId);
+    const pos = getPos(e);
 
     if (reader.tool === 'highlight' && hlDrag && pos) {
       const x = Math.min(hlDrag.startX, pos.x);
@@ -2172,14 +2201,11 @@ function setupAnnotationEvents(canvas, page) {
     }
   };
 
-  // Mouse events
-  canvas.addEventListener('mousedown', onDown);
-  canvas.addEventListener('mousemove', onMove);
-  canvas.addEventListener('mouseup', onUp);
-  // Touch events
-  canvas.addEventListener('touchstart', onDown, {passive: false});
-  canvas.addEventListener('touchmove', onMove, {passive: false});
-  canvas.addEventListener('touchend', onUp);
+  // The modern PointerEvent implementation
+  canvas.addEventListener('pointerdown', onDown);
+  canvas.addEventListener('pointermove', onMove);
+  canvas.addEventListener('pointerup', onUp);
+  canvas.addEventListener('pointercancel', onUp);
 }
 
 // ── Note popup ─────────────────────────────────────────────────────
