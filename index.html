@@ -99,6 +99,15 @@ self.addEventListener('fetch',e=>{
       .then(()=>{console.log('[PWA] Service worker registered');})
       .catch(e=>{console.warn('[PWA] SW registration failed (normal in file://):', e);});
   }
+
+  // ── Request persistent storage — prevents Android/iOS from evicting IDB/localStorage ──
+  // Chrome: auto-granted when PWA is installed to home screen.
+  // Firefox Android: prompts user or grants based on site engagement.
+  if(navigator.storage && navigator.storage.persist){
+    navigator.storage.persist().then(granted=>{
+      console.log('[PWA] Persistent storage:', granted ? 'GRANTED — data eviction blocked' : 'best-effort (consider installing the PWA)');
+    });
+  }
 })();
 </script>
 <style>
@@ -917,14 +926,52 @@ const BASE = [{"domain":"Domain I \u2013 Lab Tech","book":"Bancroft Histotechniq
 const SK = 'ini_ss_v3', KWK = 'ini_ss_kw_v1', STK = 'ini_ss_streak_v1';
 let P = {}, kwD = {}, streakD = {};
 
-function load(){
-  try{P=JSON.parse(localStorage.getItem(SK)||'{}')}catch(e){P={}}
-  try{kwD=JSON.parse(localStorage.getItem(KWK)||'{}')}catch(e){kwD={}}
-  try{streakD=JSON.parse(localStorage.getItem(STK)||'{}')}catch(e){streakD={}}
+// ── Persistence helpers ────────────────────────────────────────────
+// Primary store: IndexedDB (app_data) — survives Android cache purges.
+// Secondary store: localStorage — fast sync writes as backup.
+// On load: IDB wins if present, else falls back to localStorage then migrates.
+
+async function _saveAllToIDB() {
+  try {
+    await idbPut(IDB_APPDATA, {id: 'progress', value: P, kw: kwD, streak: streakD});
+  } catch(e) {
+    console.warn('[storage] IDB write failed, localStorage only:', e);
+  }
 }
-const save=()=>localStorage.setItem(SK,JSON.stringify(P));
-const saveKW=()=>localStorage.setItem(KWK,JSON.stringify(kwD));
-const saveStreak=()=>localStorage.setItem(STK,JSON.stringify(streakD));
+
+function _saveAllToLS() {
+  try { localStorage.setItem(SK,  JSON.stringify(P));      } catch(e) {}
+  try { localStorage.setItem(KWK, JSON.stringify(kwD));    } catch(e) {}
+  try { localStorage.setItem(STK, JSON.stringify(streakD));} catch(e) {}
+}
+
+// Called once at startup — async, fills P/kwD/streakD before UI renders
+async function load() {
+  // 1. Try IDB first
+  try {
+    const rec = await idbGet(IDB_APPDATA, 'progress');
+    if (rec) {
+      P       = rec.value   || {};
+      kwD     = rec.kw      || {};
+      streakD = rec.streak  || {};
+      // Keep localStorage in sync as a mirror
+      _saveAllToLS();
+      return;
+    }
+  } catch(e) { /* IDB not ready yet — fall through */ }
+
+  // 2. Fall back to localStorage and migrate to IDB
+  try { P       = JSON.parse(localStorage.getItem(SK)  || '{}'); } catch(e) { P       = {}; }
+  try { kwD     = JSON.parse(localStorage.getItem(KWK) || '{}'); } catch(e) { kwD     = {}; }
+  try { streakD = JSON.parse(localStorage.getItem(STK) || '{}'); } catch(e) { streakD = {}; }
+  // Persist to IDB now so future loads use the safe path
+  await _saveAllToIDB();
+}
+
+// Synchronous-feeling wrappers — write to both stores every time
+function save()      { _saveAllToLS(); _saveAllToIDB(); }
+function saveKW()    { _saveAllToLS(); _saveAllToIDB(); }
+function saveStreak(){ _saveAllToLS(); _saveAllToIDB(); }
 
 function getE(id){
   const b=BASE[id], p=P[id]||{};
@@ -1762,6 +1809,7 @@ document.getElementById('import-file').addEventListener('change', ev => {
 document.getElementById('reset-btn').addEventListener('click',()=>{
   if(!confirm('Reset ALL progress? This cannot be undone. Export first!'))return;
   P={};kwD={};streakD={};save();saveKW();saveStreak();
+  idbDelete(IDB_APPDATA, 'progress').catch(()=>{});
   selectedId=null;editingId=null;dirty=false;
   document.getElementById('detail-empty').classList.remove('hidden');
   document.getElementById('detail-content').classList.add('hidden');
@@ -1770,16 +1818,18 @@ document.getElementById('reset-btn').addEventListener('click',()=>{
 function updateStorageInfo(){
   const sz=JSON.stringify(P).length+JSON.stringify(kwD).length+JSON.stringify(streakD).length;
   document.getElementById('storage-info').innerHTML=
-    `Data size: <strong>${(sz/1024).toFixed(1)} KB</strong> &nbsp;·&nbsp; Records: <strong>${Object.keys(P).length}</strong> &nbsp;·&nbsp; Storage: <strong>localStorage</strong> (persists in installed PWA)`;
+    `Data size: <strong>${(sz/1024).toFixed(1)} KB</strong> &nbsp;·&nbsp; Records: <strong>${Object.keys(P).length}</strong> &nbsp;·&nbsp; Storage: <strong>IndexedDB + localStorage</strong> (persistent, eviction-protected)`;
 }
 
 // ══════════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════════
-load();
-updateBookDD();
-renderTopicList();
-renderDashboard();
+(async () => {
+  await load();          // wait for IDB/localStorage to populate P, kwD, streakD
+  updateBookDD();
+  renderTopicList();
+  renderDashboard();
+})();
 
 window.addEventListener('resize',()=>{
   if(!isNarrow()){
@@ -1797,17 +1847,19 @@ const IDB_NAME = 'patho_library_v1';
 const IDB_BOOKS = 'books';        // {id, name, size, addedAt, pageCount, coverDataUrl}
 const IDB_FILES = 'pdf_files';    // {id, data: ArrayBuffer}
 const IDB_ANNOTS = 'annotations'; // {key: bookId+':'+page, data: {...}}
+const IDB_APPDATA = 'app_data';   // {id: 'progress', value: P, kw: kwD, streak: streakD}
 
 let _idb = null;
 function openIDB() {
   if (_idb) return Promise.resolve(_idb);
   return new Promise((res, rej) => {
-    const req = indexedDB.open(IDB_NAME, 2);
+    const req = indexedDB.open(IDB_NAME, 3);
     req.onupgradeneeded = e => {
       const db = e.target.result;
-      if (!db.objectStoreNames.contains(IDB_BOOKS))  db.createObjectStore(IDB_BOOKS,  {keyPath:'id'});
-      if (!db.objectStoreNames.contains(IDB_FILES))  db.createObjectStore(IDB_FILES,  {keyPath:'id'});
-      if (!db.objectStoreNames.contains(IDB_ANNOTS)) db.createObjectStore(IDB_ANNOTS, {keyPath:'key'});
+      if (!db.objectStoreNames.contains(IDB_BOOKS))    db.createObjectStore(IDB_BOOKS,    {keyPath:'id'});
+      if (!db.objectStoreNames.contains(IDB_FILES))    db.createObjectStore(IDB_FILES,    {keyPath:'id'});
+      if (!db.objectStoreNames.contains(IDB_ANNOTS))   db.createObjectStore(IDB_ANNOTS,   {keyPath:'key'});
+      if (!db.objectStoreNames.contains(IDB_APPDATA))  db.createObjectStore(IDB_APPDATA,  {keyPath:'id'});
     };
     req.onsuccess = e => { _idb = e.target.result; res(_idb); };
     req.onerror  = () => rej(req.error);
