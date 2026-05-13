@@ -946,49 +946,132 @@ function getStreak(){
 // ══════════════════════════════════════════════════════════════════
 const PLAN_LIMITS = {new:5, due:8, weak:5, crit:4};
 
+// ── Deterministic daily seed (same picks all day, fresh tomorrow) ──
+function daySeed(){
+  const d=todayStr().replace(/-/g,'');
+  let h=0x811c9dc5;
+  for(let i=0;i<d.length;i++){h^=d.charCodeAt(i);h=(h*0x01000193)>>>0;}
+  return h;
+}
+function seededShuffle(arr,seed){
+  const a=[...arr];
+  let s=seed>>>0;
+  for(let i=a.length-1;i>0;i--){
+    s=(s*1664525+1013904223)>>>0;
+    const j=s%(i+1);
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+// ── Domain mastery score 0–1 (1 = fully mastered) ─────────────────
+function domainMastery(domain,all){
+  const items=all.filter(r=>r.domain===domain);
+  if(!items.length) return 1;
+  const score=items.reduce((s,r)=>{
+    if(r.status==='Mastered') return s+1;
+    if(r.recall>=4) return s+0.7;
+    if(r.recall>=3) return s+0.45;
+    if(r.recall>=2) return s+0.25;
+    if(r.last_studied) return s+0.1;
+    return s;
+  },0);
+  return score/items.length;
+}
+
+// ── Pick N items spread across domains, weighted by need ──────────
+// Domains that are less mastered get proportionally more slots.
+// A domain ≥90% mastered is considered "heavily mastered" and gets
+// at most 1 slot (unless it's the only source of candidates).
+function domainBalancedPick(candidates, n, all, seed){
+  if(!candidates.length) return [];
+  const byDomain={};
+  candidates.forEach(r=>{ (byDomain[r.domain]||(byDomain[r.domain]=[])).push(r); });
+  const domains=Object.keys(byDomain);
+
+  // Weight each domain inversely by mastery
+  const mastery=Object.fromEntries(domains.map(d=>[d,domainMastery(d,all)]));
+  const weights=Object.fromEntries(domains.map(d=>[d,Math.max(0.05,1-mastery[d])]));
+  const totalW=domains.reduce((s,d)=>s+weights[d],0);
+
+  // Allocate slots proportionally; cap heavily-mastered domains at 1 slot
+  const slots={};
+  domains.forEach(d=>{
+    const proportional=Math.round(weights[d]/totalW*n);
+    const cap=mastery[d]>=0.9?1:byDomain[d].length;
+    slots[d]=Math.min(Math.max(1,proportional),cap);
+  });
+
+  // Shuffle within each domain using daily seed, then collect picks
+  const picked=[];
+  const domainOrder=seededShuffle(domains,seed+7);
+  let remaining=n;
+  for(const d of domainOrder){
+    if(remaining<=0) break;
+    const alloc=Math.min(slots[d],remaining);
+    const shuffled=seededShuffle(byDomain[d],seed+d.length);
+    picked.push(...shuffled.slice(0,alloc));
+    remaining-=alloc;
+  }
+
+  // Fill any remaining slots from wherever candidates are left
+  if(remaining>0){
+    const used=new Set(picked.map(r=>r.id));
+    const leftovers=seededShuffle(candidates.filter(r=>!used.has(r.id)),seed+99);
+    picked.push(...leftovers.slice(0,remaining));
+  }
+
+  // Final interleave shuffle so domains mix in the rendered list
+  return seededShuffle(picked,seed+42);
+}
+
 function computePlan(){
   const today=todayStr();
+  const seed=daySeed();
   const all=BASE.map(b=>({...getE(b.id),id:b.id}));
   const studied=all.filter(r=>r.last_studied);
   const notStudied=all.filter(r=>!r.last_studied);
 
   // 1. OVERDUE — studied before, next_review passed
-  const overdue=studied.filter(r=>{
+  // Pre-sort by urgency so the most overdue bubble up inside each domain's pool
+  const overdueAll=studied.filter(r=>{
     const nr=r.next_review||srNextDate(r.recall,r.last_studied)||'9999';
     return nr<=today && r.status!=='Mastered';
   }).sort((a,b)=>{
-    // Sort by: days overdue (desc), then by recall (asc = weakest first)
     const aOver=daysAgo(a.next_review||srNextDate(a.recall,a.last_studied)||today);
     const bOver=daysAgo(b.next_review||srNextDate(b.recall,b.last_studied)||today);
     if(bOver!==aOver) return bOver-aOver;
     return a.recall-b.recall;
   });
+  const overdue=domainBalancedPick(overdueAll,PLAN_LIMITS.due,all,seed);
 
-  // 2. WEAK — studied, recall 0-2, not mastered
-  const weak=studied.filter(r=>r.recall<=2 && r.status!=='Not Started' && r.status!=='Mastered' && !overdue.find(o=>o.id===r.id))
-    .sort((a,b)=>a.recall-b.recall||daysAgo(a.last_studied||'0')-daysAgo(b.last_studied||'0'));
+  // 2. WEAK — studied, recall 0-2, not mastered, not already overdue
+  const overdueIds=new Set(overdueAll.map(r=>r.id));
+  const weakAll=studied.filter(r=>
+    r.recall<=2 && r.status!=='Not Started' && r.status!=='Mastered' && !overdueIds.has(r.id)
+  );
+  const weak=domainBalancedPick(weakAll,PLAN_LIMITS.weak,all,seed+1);
 
-  // 3. NEW — not started, prioritised by domain order and priority
+  // 3. NEW — not started; sort by priority within each domain before balancing
   const PRIO_W={Critical:4,High:3,Medium:2,Low:1};
-  const DOM_W={'Domain I \u2013 Lab Tech':5,'Domain I \u2013 RBC/Coag':5,'Domain II \u2013 Surgical':4,'Domain III \u2013 WHO 5th Ed':3,'Domain IV \u2013 Cytopathology':3};
-  const newTopics=notStudied.filter(r=>r.status==='Not Started')
-    .sort((a,b)=>{
-      const pw=(PRIO_W[b.priority]||2)-(PRIO_W[a.priority]||2);
-      if(pw!==0) return pw;
-      return (DOM_W[b.domain]||3)-(DOM_W[a.domain]||3);
-    });
+  const newAll=notStudied.filter(r=>r.status==='Not Started')
+    .sort((a,b)=>(PRIO_W[b.priority]||2)-(PRIO_W[a.priority]||2));
+  const newTopics=domainBalancedPick(newAll,PLAN_LIMITS.new,all,seed+2);
 
-  // 4. CRITICAL — priority=Critical not yet mastered
-  const critical=all.filter(r=>r.priority==='Critical' && r.status!=='Mastered')
-    .filter(r=>!overdue.find(o=>o.id===r.id) && !weak.find(w=>w.id===r.id))
-    .sort((a,b)=>a.recall-b.recall);
+  // 4. CRITICAL — priority=Critical, not mastered, not in other buckets
+  const weakIds=new Set(weak.map(r=>r.id));
+  const critAll=all.filter(r=>
+    r.priority==='Critical' && r.status!=='Mastered' &&
+    !overdueIds.has(r.id) && !weakIds.has(r.id)
+  );
+  const critical=domainBalancedPick(critAll,PLAN_LIMITS.crit,all,seed+3);
 
   return{
-    overdue:overdue.slice(0,PLAN_LIMITS.due),
-    weak:weak.slice(0,PLAN_LIMITS.weak),
-    newTopics:newTopics.slice(0,PLAN_LIMITS.new),
-    critical:critical.slice(0,PLAN_LIMITS.crit),
-    allOverdue:overdue,
+    overdue,
+    weak,
+    newTopics,
+    critical,
+    allOverdue:overdueAll,
     totalNew:notStudied.length,
   };
 }
