@@ -250,6 +250,112 @@ html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--b
   .full-col{grid-column:1}
   .plan-cols{grid-template-columns:1fr}
 }
+
+/* ══════════════ LIBRARY PAGE ══════════════ */
+.lib-page{flex:1;overflow-y:auto;padding:18px;padding-bottom:calc(18px + var(--safe-b))}
+.lib-inner{max-width:1100px;margin:0 auto}
+.lib-topbar{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.lib-topbar h2{font-size:1rem;font-weight:800;color:var(--navy);flex:1}
+.book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+.book-card{background:var(--card);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.09);overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative}
+.book-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.14)}
+.book-card:active{transform:scale(.97)}
+.book-cover{width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative;overflow:hidden}
+.book-cover canvas{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.book-cover-placeholder{position:relative;z-index:1}
+.book-meta{padding:10px 12px}
+.book-title{font-size:.78rem;font-weight:700;color:var(--navy);line-height:1.3;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.book-sub{font-size:.68rem;color:var(--text-light)}
+.book-badge{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.5);color:white;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:8px}
+.book-delete{position:absolute;top:8px;left:8px;background:rgba(200,0,0,.7);color:white;border:none;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.75rem;cursor:pointer;opacity:0;transition:opacity .15s}
+.book-card:hover .book-delete{opacity:1}
+.upload-card{background:var(--card);border-radius:12px;border:2.5px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;aspect-ratio:3/4;transition:border-color .15s,background .15s;color:var(--text-light)}
+.upload-card:hover{border-color:var(--mid-blue);background:#f0f6ff;color:var(--mid-blue)}
+.upload-card:active{transform:scale(.97)}
+.upload-card svg{width:32px;height:32px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.upload-card span{font-size:.75rem;font-weight:600;text-align:center;padding:0 8px}
+
+/* ══════════════ READER PAGE ══════════════ */
+.reader-page{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#2b2b2b}
+.reader-topbar{background:#1a1a1a;color:white;display:flex;align-items:center;gap:8px;padding:0 12px;height:48px;flex-shrink:0;z-index:10}
+.reader-title{flex:1;font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:rgba(255,255,255,.85)}
+.reader-nav{display:flex;align-items:center;gap:4px}
+.r-btn{background:rgba(255,255,255,.1);border:none;color:white;border-radius:7px;padding:5px 10px;font-size:.78rem;cursor:pointer;white-space:nowrap;touch-action:manipulation;transition:background .12s}
+.r-btn:hover{background:rgba(255,255,255,.2)}
+.r-btn:active{background:rgba(255,255,255,.3);transform:scale(.95)}
+.r-btn.active{background:rgba(255,255,255,.25);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)}
+.r-page-input{width:52px;text-align:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;border-radius:6px;padding:4px 6px;font-size:.8rem}
+.r-page-input:focus{outline:none;border-color:var(--amber)}
+.r-sep{width:1px;height:24px;background:rgba(255,255,255,.15);margin:0 4px}
+
+.reader-body{flex:1;display:flex;overflow:hidden}
+
+/* Tool sidebar */
+.tool-sidebar{width:52px;background:#111;display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:6px;flex-shrink:0;overflow-y:auto}
+.tool-btn{width:40px;height:40px;border-radius:9px;border:none;color:rgba(255,255,255,.7);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;transition:background .12s,color .12s;position:relative;touch-action:manipulation;flex-shrink:0}
+.tool-btn:hover{background:rgba(255,255,255,.1);color:white}
+.tool-btn.active{background:rgba(255,255,255,.18);color:white;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3)}
+.tool-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tool-divider{width:28px;height:1px;background:rgba(255,255,255,.12);margin:3px 0}
+.color-swatch{width:24px;height:24px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:transform .12s;flex-shrink:0;touch-action:manipulation}
+.color-swatch.active{border-color:white;transform:scale(1.15)}
+.size-btn{width:32px;height:32px;border-radius:7px;border:none;background:transparent;color:rgba(255,255,255,.6);font-size:.65rem;font-weight:700;cursor:pointer;transition:background .12s}
+.size-btn.active{background:rgba(255,255,255,.2);color:white}
+
+/* Annotation panel */
+.annot-panel{width:260px;background:#1e1e1e;border-left:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;transition:width .2s}
+.annot-panel.collapsed{width:0}
+.annot-panel-hdr{padding:12px 14px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.5);border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.annot-list{flex:1;overflow-y:auto;padding:8px}
+.annot-item{background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:background .12s;border-left:3px solid transparent}
+.annot-item:hover{background:rgba(255,255,255,.1)}
+.annot-item-page{font-size:.65rem;color:rgba(255,255,255,.4);margin-bottom:3px}
+.annot-item-text{font-size:.76rem;color:rgba(255,255,255,.8);line-height:1.4}
+
+/* Canvas viewport */
+.pdf-viewport{flex:1;overflow:auto;display:flex;flex-direction:column;align-items:center;padding:16px;gap:12px;background:#3a3a3a;position:relative;-webkit-overflow-scrolling:touch}
+.page-container{position:relative;box-shadow:0 4px 20px rgba(0,0,0,.5);flex-shrink:0}
+.page-container canvas{display:block}
+.annot-canvas{position:absolute;inset:0;touch-action:none;cursor:crosshair}
+.annot-canvas.tool-select{cursor:default}
+.annot-canvas.tool-highlight{cursor:text}
+.annot-canvas.tool-pen{cursor:crosshair}
+.annot-canvas.tool-eraser{cursor:cell}
+.annot-canvas.tool-note{cursor:pointer}
+
+/* Text note popup */
+.note-popup{position:absolute;background:white;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.4);padding:12px;width:220px;z-index:1000;display:none}
+.note-popup.show{display:block}
+.note-popup textarea{width:100%;height:80px;border:1px solid var(--border);border-radius:6px;padding:7px;font-size:.82rem;font-family:var(--font);resize:none;margin-bottom:8px}
+.note-popup-row{display:flex;gap:6px;justify-content:flex-end}
+
+/* Loading / empty states */
+.reader-loading{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:rgba(255,255,255,.5)}
+.reader-loading .spin{width:40px;height:40px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.lib-empty{text-align:center;padding:48px 24px;color:var(--text-light)}
+.lib-empty .lib-empty-icon{font-size:4rem;opacity:.3;margin-bottom:14px}
+
+/* Highlight selection box */
+.hl-selection{position:absolute;pointer-events:none;border-radius:2px;mix-blend-mode:multiply}
+
+/* Thumb strip */
+.thumb-strip{width:90px;background:#111;flex-shrink:0;overflow-y:auto;border-right:1px solid rgba(255,255,255,.1);padding:6px;display:flex;flex-direction:column;gap:5px}
+.thumb-item{position:relative;cursor:pointer;border-radius:4px;overflow:hidden;border:2px solid transparent;transition:border-color .12s}
+.thumb-item.active{border-color:var(--amber)}
+.thumb-item canvas{width:100%;display:block}
+.thumb-page-num{position:absolute;bottom:2px;right:4px;font-size:.58rem;font-weight:700;color:white;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+
+@media(max-width:767px){
+  .book-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+  .annot-panel{display:none}
+  .thumb-strip{width:60px}
+  .tool-sidebar{width:44px}
+  .tool-btn{width:36px;height:36px;font-size:.95rem}
+  .reader-topbar{padding:0 8px;gap:5px}
+}
+
 </style>
 </head>
 <body>
@@ -264,6 +370,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--b
     <div class="nav-tab" data-page="tracker">📋 <span class="tl">Tracker</span></div>
     <div class="nav-tab" data-page="kw">🕸 <span class="tl">Knowledge Web</span></div>
     <div class="nav-tab" data-page="io">⬇ <span class="tl">Export</span></div>
+    <div class="nav-tab" data-page="library">📚 <span class="tl">Library</span></div>
   </div>
   <div class="nav-actions">
     <button class="icon-btn" id="fs-btn" title="Fullscreen">
@@ -576,6 +683,137 @@ html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--b
 </div>
 </div>
 
+
+<!-- ══════════════════════════════════════════════
+     LIBRARY
+══════════════════════════════════════════════ -->
+<div class="page" id="page-library">
+<div class="lib-page">
+<div class="lib-inner">
+  <div class="lib-topbar">
+    <h2>📚 Book Library</h2>
+    <span id="lib-storage-info" style="font-size:.72rem;color:var(--text-light)"></span>
+    <button class="btn btn-primary btn-sm" id="lib-upload-btn">+ Upload PDF</button>
+  </div>
+  <input type="file" id="lib-file-input" accept="application/pdf" multiple style="display:none">
+  <div class="book-grid" id="book-grid">
+    <div class="lib-empty" style="grid-column:1/-1">
+      <div class="lib-empty-icon">📖</div>
+      <p style="font-size:.9rem;font-weight:600;margin-bottom:6px">No books yet</p>
+      <p style="font-size:.8rem">Upload your textbook PDFs to read, highlight and annotate without leaving the app.</p>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     READER
+══════════════════════════════════════════════ -->
+<div class="page" id="page-reader">
+<div class="reader-page">
+
+  <!-- Top bar -->
+  <div class="reader-topbar">
+    <button class="r-btn" id="r-back-btn" style="padding:5px 8px">
+      <svg style="width:14px;height:14px;stroke:white;fill:none;stroke-width:2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="reader-title" id="r-title">Book Title</div>
+    <div class="reader-nav">
+      <button class="r-btn" id="r-prev">‹</button>
+      <input class="r-page-input" id="r-page-input" type="number" min="1" value="1">
+      <span style="color:rgba(255,255,255,.5);font-size:.78rem"> / </span>
+      <span id="r-total-pages" style="color:rgba(255,255,255,.5);font-size:.78rem">—</span>
+      <button class="r-btn" id="r-next">›</button>
+    </div>
+    <div class="r-sep"></div>
+    <button class="r-btn" id="r-zoom-out">−</button>
+    <span id="r-zoom-label" style="color:rgba(255,255,255,.6);font-size:.75rem;min-width:34px;text-align:center">100%</span>
+    <button class="r-btn" id="r-zoom-in">+</button>
+    <div class="r-sep"></div>
+    <button class="r-btn" id="r-annot-toggle" title="Annotations panel">📝</button>
+    <button class="r-btn" id="r-thumb-toggle" title="Page thumbnails">⊞</button>
+  </div>
+
+  <div class="reader-body">
+
+    <!-- Thumb strip -->
+    <div class="thumb-strip hidden" id="thumb-strip"></div>
+
+    <!-- Tool sidebar -->
+    <div class="tool-sidebar">
+      <button class="tool-btn active" id="tool-select" title="Select / Pan">
+        <svg viewBox="0 0 24 24"><path d="M5 3l14 9-7 1-4 7z"/></svg>
+      </button>
+      <button class="tool-btn" id="tool-highlight" title="Highlight">
+        <svg viewBox="0 0 24 24"><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M9 14V5l6 0v9"/></svg>
+      </button>
+      <button class="tool-btn" id="tool-pen" title="Freehand pen">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </button>
+      <button class="tool-btn" id="tool-eraser" title="Eraser">
+        <svg viewBox="0 0 24 24"><path d="M20 20H7L3 16l13-13 7 7z"/><path d="M6 14l8-8"/></svg>
+      </button>
+      <button class="tool-btn" id="tool-note" title="Text note">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </button>
+      <div class="tool-divider"></div>
+      <!-- Highlight colors -->
+      <div class="color-swatch active" data-color="rgba(255,234,0,0.45)" style="background:#FFD700" title="Yellow"></div>
+      <div class="color-swatch" data-color="rgba(0,220,100,0.4)" style="background:#00DC64" title="Green"></div>
+      <div class="color-swatch" data-color="rgba(255,100,100,0.4)" style="background:#FF6464" title="Red/Pink"></div>
+      <div class="color-swatch" data-color="rgba(100,160,255,0.45)" style="background:#64A0FF" title="Blue"></div>
+      <div class="color-swatch" data-color="rgba(220,100,255,0.4)" style="background:#DC64FF" title="Purple"></div>
+      <div class="tool-divider"></div>
+      <!-- Pen size -->
+      <button class="size-btn" data-size="2">S</button>
+      <button class="size-btn active" data-size="4">M</button>
+      <button class="size-btn" data-size="8">L</button>
+      <div class="tool-divider"></div>
+      <!-- Pen color -->
+      <div class="color-swatch active" data-pen-color="#FF3333" style="background:#FF3333" title="Red pen"></div>
+      <div class="color-swatch" data-pen-color="#1565C0" style="background:#1565C0" title="Blue pen"></div>
+      <div class="color-swatch" data-pen-color="#1B5E20" style="background:#1B5E20" title="Green pen"></div>
+      <div class="color-swatch" data-pen-color="#000000" style="background:#888;border-color:rgba(255,255,255,.3)" title="Black pen"></div>
+      <div class="tool-divider"></div>
+      <button class="tool-btn" id="clear-page-btn" title="Clear all annotations on this page">
+        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button>
+    </div>
+
+    <!-- PDF canvas viewport -->
+    <div class="pdf-viewport" id="pdf-viewport">
+      <div class="reader-loading" id="reader-loading">
+        <div class="spin"></div>
+        <span>Loading PDF…</span>
+      </div>
+    </div>
+
+    <!-- Annotations panel -->
+    <div class="annot-panel" id="annot-panel">
+      <div class="annot-panel-hdr">
+        <span>Annotations</span>
+        <button class="r-btn" id="annot-close-btn" style="padding:2px 6px;font-size:.7rem">✕</button>
+      </div>
+      <div class="annot-list" id="annot-list">
+        <div style="padding:16px;color:rgba(255,255,255,.3);font-size:.78rem;text-align:center">No annotations yet</div>
+      </div>
+    </div>
+
+  </div><!-- reader-body -->
+
+  <!-- Text note popup -->
+  <div class="note-popup" id="note-popup">
+    <textarea id="note-text" placeholder="Type your note…"></textarea>
+    <div class="note-popup-row">
+      <button class="btn btn-sm btn-ghost" id="note-cancel">Cancel</button>
+      <button class="btn btn-sm btn-primary" id="note-save">Save Note</button>
+    </div>
+  </div>
+
+</div><!-- reader-page -->
+</div><!-- page-reader -->
+
 </div><!-- #pages -->
 </div><!-- #app -->
 <div id="toast"></div>
@@ -599,7 +837,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--b
   }
   const i192=makeIcon(192),i512=makeIcon(512);
   const mf={name:'INI-SS Pathology Tracker',short_name:'Patho Tracker',
-    description:'Pathology Study Tracker with Spaced Repetition',
+    description:'INI-SS Rank <6 Study Tracker with Spaced Repetition',
     start_url:'.',display:'standalone',background_color:'#0D1B2A',theme_color:'#0D1B2A',
     orientation:'any',
     icons:[{src:i192,sizes:'192x192',type:'image/png'},{src:i512,sizes:'512x512',type:'image/png',purpose:'any maskable'}]};
@@ -1390,6 +1628,808 @@ window.addEventListener('resize',()=>{
     document.getElementById('detail-panel').classList.remove('open');
   }
 });
+
+// ══════════════════════════════════════════════════════════════════
+// LIBRARY & PDF READER
+// ══════════════════════════════════════════════════════════════════
+
+// ── IndexedDB setup ───────────────────────────────────────────────
+const IDB_NAME = 'patho_library_v1';
+const IDB_BOOKS = 'books';        // {id, name, size, addedAt, pageCount, coverDataUrl}
+const IDB_FILES = 'pdf_files';    // {id, data: ArrayBuffer}
+const IDB_ANNOTS = 'annotations'; // {key: bookId+':'+page, data: {...}}
+
+let _idb = null;
+function openIDB() {
+  if (_idb) return Promise.resolve(_idb);
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(IDB_NAME, 2);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(IDB_BOOKS))  db.createObjectStore(IDB_BOOKS,  {keyPath:'id'});
+      if (!db.objectStoreNames.contains(IDB_FILES))  db.createObjectStore(IDB_FILES,  {keyPath:'id'});
+      if (!db.objectStoreNames.contains(IDB_ANNOTS)) db.createObjectStore(IDB_ANNOTS, {keyPath:'key'});
+    };
+    req.onsuccess = e => { _idb = e.target.result; res(_idb); };
+    req.onerror  = () => rej(req.error);
+  });
+}
+
+function idbPut(store, obj) {
+  return openIDB().then(db => new Promise((res,rej) => {
+    const tx = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).put(obj);
+    req.onsuccess = () => res(req.result);
+    req.onerror   = () => rej(req.error);
+  }));
+}
+function idbGet(store, key) {
+  return openIDB().then(db => new Promise((res,rej) => {
+    const tx = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).get(key);
+    req.onsuccess = () => res(req.result);
+    req.onerror   = () => rej(req.error);
+  }));
+}
+function idbGetAll(store) {
+  return openIDB().then(db => new Promise((res,rej) => {
+    const tx = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).getAll();
+    req.onsuccess = () => res(req.result);
+    req.onerror   = () => rej(req.error);
+  }));
+}
+function idbDelete(store, key) {
+  return openIDB().then(db => new Promise((res,rej) => {
+    const tx = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).delete(key);
+    req.onsuccess = () => res();
+    req.onerror   = () => rej(req.error);
+  }));
+}
+
+// ── PDF.js loader (lazy, from CDN) ────────────────────────────────
+let _pdfjs = null;
+function getPdfJs() {
+  if (_pdfjs) return Promise.resolve(_pdfjs);
+  return new Promise((res, rej) => {
+    // Load PDF.js as classic script (not ESM) for max compatibility
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload = () => {
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      _pdfjs = pdfjsLib;
+      res(_pdfjs);
+    };
+    s.onerror = () => rej(new Error('Failed to load PDF.js from CDN. Check your internet connection.'));
+    document.head.appendChild(s);
+  });
+}
+
+// ── State ─────────────────────────────────────────────────────────
+let libBooks = [];       // metadata from IDB
+let reader = {           // active reader state
+  bookId: null,
+  pdfDoc: null,
+  currentPage: 1,
+  totalPages: 0,
+  zoom: 1.0,
+  tool: 'select',
+  hlColor: 'rgba(255,234,0,0.45)',
+  penColor: '#FF3333',
+  penSize: 4,
+  annotations: {},       // page -> {highlights:[], strokes:[], notes:[]}
+  drawing: false,
+  currentStroke: [],
+  hlStart: null,
+  pageContainers: {},    // page -> {pdfCanvas, annotCanvas, ctx}
+  renderQueue: new Set(),
+  thumbsRendered: false,
+};
+
+// ── Library render ─────────────────────────────────────────────────
+async function renderLibrary() {
+  libBooks = await idbGetAll(IDB_BOOKS);
+  const grid = document.getElementById('book-grid');
+  grid.innerHTML = '';
+
+  if (!libBooks.length) {
+    grid.innerHTML = `<div class="lib-empty" style="grid-column:1/-1">
+      <div class="lib-empty-icon">📖</div>
+      <p style="font-size:.9rem;font-weight:600;margin-bottom:6px">No books yet</p>
+      <p style="font-size:.8rem;line-height:1.6">Upload your textbook PDFs — Bancroft, Hoffbrand, Gattuso, WHO volumes — to read, highlight and annotate without leaving the app.<br><br>Books are stored locally on your device.</p>
+    </div>`;
+  }
+
+  // Upload card always first
+  const uploadCard = document.createElement('div');
+  uploadCard.className = 'upload-card';
+  uploadCard.innerHTML = `
+    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    <span>Upload PDF<br>Tap to browse</span>`;
+  uploadCard.addEventListener('click', () => document.getElementById('lib-file-input').click());
+  grid.appendChild(uploadCard);
+
+  // Book cards
+  libBooks.forEach(book => {
+    const card = document.createElement('div');
+    card.className = 'book-card';
+
+    // Domain colour from book name match
+    const domColor = guessDomainColor(book.name);
+
+    card.innerHTML = `
+      <div class="book-cover" style="background:linear-gradient(145deg,${domColor}dd,${domColor}88)">
+        ${book.coverDataUrl
+          ? `<img src="${book.coverDataUrl}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0">`
+          : `<span class="book-cover-placeholder" style="font-size:2.8rem">${bookEmoji(book.name)}</span>`}
+        <div class="book-badge">${book.pageCount}p</div>
+        <button class="book-delete" data-id="${book.id}" title="Remove book">✕</button>
+      </div>
+      <div class="book-meta">
+        <div class="book-title">${escH(book.name)}</div>
+        <div class="book-sub">${formatBytes(book.size)} · Added ${new Date(book.addedAt).toLocaleDateString()}</div>
+      </div>`;
+
+    card.addEventListener('click', e => {
+      if (e.target.classList.contains('book-delete')) return;
+      openReader(book.id);
+    });
+    card.querySelector('.book-delete').addEventListener('click', async e => {
+      e.stopPropagation();
+      if (!confirm(`Remove "${book.name}"? Annotations will be deleted.`)) return;
+      await idbDelete(IDB_BOOKS, book.id);
+      await idbDelete(IDB_FILES, book.id);
+      // Delete annotations for this book
+      const allAnnots = await idbGetAll(IDB_ANNOTS);
+      for (const a of allAnnots) {
+        if (a.key.startsWith(book.id + ':')) await idbDelete(IDB_ANNOTS, a.key);
+      }
+      await renderLibrary();
+      updateLibStorageInfo();
+      toast('Book removed');
+    });
+
+    grid.appendChild(card);
+  });
+
+  updateLibStorageInfo();
+}
+
+function guessDomainColor(name) {
+  const n = name.toLowerCase();
+  if (n.includes('bancroft') || n.includes('dacie')) return '#1A5276';
+  if (n.includes('hoffbrand')) return '#117A65';
+  if (n.includes('gattuso') || n.includes('surgical')) return '#2E7D32';
+  if (n.includes('who') || n.includes('tumour') || n.includes('tumor')) return '#6C3483';
+  if (n.includes('cyto') || n.includes('paris') || n.includes('bethesda') || n.includes('milan')) return '#784212';
+  return '#2C3E50';
+}
+
+function bookEmoji(name) {
+  const n = name.toLowerCase();
+  if (n.includes('cyto')) return '🧫';
+  if (n.includes('haem') || n.includes('heme') || n.includes('hoffbrand')) return '🩸';
+  if (n.includes('who')) return '🏥';
+  if (n.includes('surgical') || n.includes('gattuso')) return '🔪';
+  return '📗';
+}
+
+function formatBytes(b) {
+  if (b > 1048576) return (b/1048576).toFixed(1) + ' MB';
+  return (b/1024).toFixed(0) + ' KB';
+}
+
+async function updateLibStorageInfo() {
+  const books = await idbGetAll(IDB_BOOKS);
+  const totalSize = books.reduce((a, b) => a + (b.size || 0), 0);
+  document.getElementById('lib-storage-info').textContent =
+    `${books.length} book${books.length !== 1 ? 's' : ''} · ${formatBytes(totalSize)} stored`;
+}
+
+// ── Upload handler ─────────────────────────────────────────────────
+document.getElementById('lib-upload-btn').addEventListener('click', () => {
+  document.getElementById('lib-file-input').click();
+});
+
+document.getElementById('lib-file-input').addEventListener('change', async e => {
+  const files = Array.from(e.target.files);
+  e.target.value = '';
+  if (!files.length) return;
+
+  toast(`Loading PDF.js…`);
+  let pdfjs;
+  try { pdfjs = await getPdfJs(); }
+  catch(err) { alert('Could not load PDF renderer: ' + err.message); return; }
+
+  for (const file of files) {
+    toast(`Processing ${file.name}…`);
+    try {
+      const ab = await file.arrayBuffer();
+      const id = 'book_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+
+      // Load briefly to get page count + cover
+      const pdf = await pdfjs.getDocument({data: ab.slice(0)}).promise;
+      const pageCount = pdf.numPages;
+
+      // Render cover page to thumbnail
+      let coverDataUrl = null;
+      try {
+        const page = await pdf.getPage(1);
+        const vp = page.getViewport({scale: 0.5});
+        const cc = document.createElement('canvas');
+        cc.width = vp.width; cc.height = vp.height;
+        await page.render({canvasContext: cc.getContext('2d'), viewport: vp}).promise;
+        coverDataUrl = cc.toDataURL('image/jpeg', 0.7);
+      } catch(err) {}
+
+      const meta = {
+        id, name: file.name.replace(/\.pdf$/i,''), size: file.size,
+        addedAt: new Date().toISOString(), pageCount, coverDataUrl
+      };
+      await idbPut(IDB_BOOKS, meta);
+      await idbPut(IDB_FILES, {id, data: ab});
+      toast(`"${meta.name}" added ✓`);
+    } catch(err) {
+      alert(`Failed to load ${file.name}: ${err.message}`);
+    }
+  }
+  await renderLibrary();
+});
+
+// ── Annotation persistence ─────────────────────────────────────────
+function annotKey(bookId, page) { return bookId + ':' + page; }
+
+async function loadPageAnnotations(bookId, page) {
+  const key = annotKey(bookId, page);
+  if (reader.annotations[page]) return reader.annotations[page];
+  const rec = await idbGet(IDB_ANNOTS, key);
+  const data = rec ? rec.data : {highlights: [], strokes: [], notes: []};
+  reader.annotations[page] = data;
+  return data;
+}
+
+async function savePageAnnotations(bookId, page) {
+  const data = reader.annotations[page];
+  if (!data) return;
+  await idbPut(IDB_ANNOTS, {key: annotKey(bookId, page), data});
+}
+
+// ── Open reader ────────────────────────────────────────────────────
+async function openReader(bookId) {
+  // Navigate to reader page
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-reader').classList.add('active');
+  curPage = 'reader';
+
+  // Reset state
+  reader.bookId = bookId;
+  reader.currentPage = 1;
+  reader.zoom = 1.0;
+  reader.annotations = {};
+  reader.thumbsRendered = false;
+  reader.pageContainers = {};
+  document.getElementById('pdf-viewport').innerHTML =
+    '<div class="reader-loading"><div class="spin"></div><span>Loading PDF…</span></div>';
+  document.getElementById('thumb-strip').innerHTML = '';
+
+  const bookMeta = await idbGet(IDB_BOOKS, bookId);
+  document.getElementById('r-title').textContent = bookMeta ? bookMeta.name : 'Book';
+
+  let pdfjs;
+  try { pdfjs = await getPdfJs(); }
+  catch(err) { alert('PDF.js unavailable: ' + err.message); return; }
+
+  const fileRec = await idbGet(IDB_FILES, bookId);
+  if (!fileRec) { alert('File not found in storage.'); return; }
+
+  try {
+    reader.pdfDoc = await pdfjs.getDocument({data: fileRec.data.slice(0)}).promise;
+    reader.totalPages = reader.pdfDoc.numPages;
+    document.getElementById('r-total-pages').textContent = reader.totalPages;
+    document.getElementById('r-page-input').max = reader.totalPages;
+    updateZoomLabel();
+    await renderReaderPage(1);
+    renderAllAnnotList();
+  } catch(err) {
+    document.getElementById('pdf-viewport').innerHTML =
+      `<div class="reader-loading" style="color:#f88"><span>Failed to load PDF: ${err.message}</span></div>`;
+  }
+}
+
+// ── Render a single PDF page ───────────────────────────────────────
+async function renderReaderPage(pageNum) {
+  if (!reader.pdfDoc) return;
+  pageNum = Math.max(1, Math.min(pageNum, reader.totalPages));
+  reader.currentPage = pageNum;
+  document.getElementById('r-page-input').value = pageNum;
+
+  const viewport_el = document.getElementById('pdf-viewport');
+
+  // Clear previous content
+  viewport_el.innerHTML = '';
+
+  // Load annotations for this page
+  await loadPageAnnotations(reader.bookId, pageNum);
+
+  const page = await reader.pdfDoc.getPage(pageNum);
+  const scale = reader.zoom * (window.devicePixelRatio || 1);
+  const vp = page.getViewport({scale: reader.zoom});
+
+  // Page container
+  const container = document.createElement('div');
+  container.className = 'page-container';
+  container.style.width = vp.width + 'px';
+  container.style.height = vp.height + 'px';
+
+  // PDF canvas
+  const pdfCanvas = document.createElement('canvas');
+  const dpr = window.devicePixelRatio || 1;
+  const vpHiDPI = page.getViewport({scale: reader.zoom * dpr});
+  pdfCanvas.width = vpHiDPI.width;
+  pdfCanvas.height = vpHiDPI.height;
+  pdfCanvas.style.width = vp.width + 'px';
+  pdfCanvas.style.height = vp.height + 'px';
+
+  // Annotation canvas (overlay)
+  const annotCanvas = document.createElement('canvas');
+  annotCanvas.className = 'annot-canvas tool-' + reader.tool;
+  annotCanvas.width = vpHiDPI.width;
+  annotCanvas.height = vpHiDPI.height;
+  annotCanvas.style.width = vp.width + 'px';
+  annotCanvas.style.height = vp.height + 'px';
+
+  container.appendChild(pdfCanvas);
+  container.appendChild(annotCanvas);
+  viewport_el.appendChild(container);
+
+  // Render PDF
+  await page.render({
+    canvasContext: pdfCanvas.getContext('2d'),
+    viewport: vpHiDPI
+  }).promise;
+
+  // Store references
+  reader.pageContainers[pageNum] = {
+    pdfCanvas, annotCanvas,
+    ctx: annotCanvas.getContext('2d'),
+    vp, vpHiDPI, dpr,
+    width: vp.width, height: vp.height
+  };
+
+  // Draw stored annotations
+  drawAnnotations(pageNum);
+
+  // Set up annotation interaction
+  setupAnnotationEvents(annotCanvas, pageNum);
+}
+
+// ── Draw all annotations for a page ───────────────────────────────
+function drawAnnotations(page) {
+  const pc = reader.pageContainers[page];
+  if (!pc) return;
+  const {ctx, vpHiDPI, dpr} = pc;
+  const annots = reader.annotations[page] || {highlights:[], strokes:[], notes:[]};
+
+  ctx.clearRect(0, 0, vpHiDPI.width, vpHiDPI.height);
+
+  // Highlights
+  annots.highlights.forEach(h => {
+    ctx.fillStyle = h.color;
+    ctx.fillRect(h.x * dpr, h.y * dpr, h.w * dpr, h.h * dpr);
+  });
+
+  // Strokes (freehand)
+  annots.strokes.forEach(stroke => {
+    if (!stroke.points.length) return;
+    ctx.beginPath();
+    ctx.strokeStyle = stroke.color;
+    ctx.lineWidth = stroke.size * dpr;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalCompositeOperation = stroke.eraser ? 'destination-out' : 'source-over';
+    const pts = stroke.points;
+    ctx.moveTo(pts[0].x * dpr, pts[0].y * dpr);
+    for (let i = 1; i < pts.length; i++) {
+      ctx.lineTo(pts[i].x * dpr, pts[i].y * dpr);
+    }
+    ctx.stroke();
+    ctx.globalCompositeOperation = 'source-over';
+  });
+
+  // Notes (sticky markers)
+  annots.notes.forEach((note, i) => {
+    ctx.fillStyle = 'rgba(255,214,0,0.9)';
+    ctx.beginPath();
+    ctx.arc(note.x * dpr, note.y * dpr, 10 * dpr, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#333';
+    ctx.font = `bold ${10*dpr}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(i + 1, note.x * dpr, note.y * dpr);
+  });
+}
+
+// ── Annotation interaction ─────────────────────────────────────────
+let _pendingNote = null;
+
+function setupAnnotationEvents(canvas, page) {
+  const getPos = e => {
+    const rect = canvas.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return {
+      x: (src.clientX - rect.left),
+      y: (src.clientY - rect.top)
+    };
+  };
+
+  // Highlight drag state
+  let hlDrag = null;
+
+  const onDown = e => {
+    if (reader.tool === 'select') return;
+    e.preventDefault();
+    const pos = getPos(e);
+
+    if (reader.tool === 'highlight') {
+      hlDrag = {startX: pos.x, startY: pos.y, color: reader.hlColor};
+      return;
+    }
+    if (reader.tool === 'pen' || reader.tool === 'eraser') {
+      reader.drawing = true;
+      reader.currentStroke = [{x: pos.x, y: pos.y}];
+      return;
+    }
+    if (reader.tool === 'note') {
+      _pendingNote = {x: pos.x, y: pos.y, page};
+      showNotePopup(pos.x, pos.y, canvas);
+      return;
+    }
+  };
+
+  const onMove = e => {
+    if (reader.tool === 'select') return;
+    e.preventDefault();
+    const pos = getPos(e);
+
+    if (reader.tool === 'highlight' && hlDrag) {
+      // Draw live preview
+      const pc = reader.pageContainers[page];
+      if (!pc) return;
+      drawAnnotations(page);
+      const {ctx, dpr} = pc;
+      const x = Math.min(hlDrag.startX, pos.x);
+      const y = Math.min(hlDrag.startY, pos.y);
+      const w = Math.abs(pos.x - hlDrag.startX);
+      const h = Math.abs(pos.y - hlDrag.startY);
+      ctx.fillStyle = hlDrag.color;
+      ctx.fillRect(x * dpr, y * dpr, w * dpr, h * dpr);
+      return;
+    }
+
+    if ((reader.tool === 'pen' || reader.tool === 'eraser') && reader.drawing) {
+      reader.currentStroke.push({x: pos.x, y: pos.y});
+      // Draw incremental stroke
+      const pc = reader.pageContainers[page];
+      if (!pc) return;
+      const {ctx, dpr} = pc;
+      const pts = reader.currentStroke;
+      if (pts.length < 2) return;
+      ctx.beginPath();
+      ctx.strokeStyle = reader.tool === 'eraser' ? 'rgba(0,0,0,1)' : reader.penColor;
+      ctx.lineWidth = reader.penSize * dpr;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.globalCompositeOperation = reader.tool === 'eraser' ? 'destination-out' : 'source-over';
+      ctx.moveTo(pts[pts.length-2].x * dpr, pts[pts.length-2].y * dpr);
+      ctx.lineTo(pts[pts.length-1].x * dpr, pts[pts.length-1].y * dpr);
+      ctx.stroke();
+      ctx.globalCompositeOperation = 'source-over';
+    }
+  };
+
+  const onUp = async e => {
+    if (reader.tool === 'select') return;
+    const pos = e.changedTouches ? getPos({touches: e.changedTouches}) : (e.type === 'mouseup' ? getPos(e) : null);
+
+    if (reader.tool === 'highlight' && hlDrag && pos) {
+      const x = Math.min(hlDrag.startX, pos.x);
+      const y = Math.min(hlDrag.startY, pos.y);
+      const w = Math.abs(pos.x - hlDrag.startX);
+      const h = Math.abs(pos.y - hlDrag.startY);
+      if (w > 4 && h > 4) {
+        const annots = reader.annotations[page] || {highlights:[], strokes:[], notes:[]};
+        reader.annotations[page] = annots;
+        annots.highlights.push({x, y, w, h, color: hlDrag.color, id: Date.now()});
+        await savePageAnnotations(reader.bookId, page);
+        drawAnnotations(page);
+        renderAllAnnotList();
+      }
+      hlDrag = null;
+      return;
+    }
+
+    if ((reader.tool === 'pen' || reader.tool === 'eraser') && reader.drawing) {
+      reader.drawing = false;
+      if (reader.currentStroke.length > 1) {
+        const annots = reader.annotations[page] || {highlights:[], strokes:[], notes:[]};
+        reader.annotations[page] = annots;
+        annots.strokes.push({
+          points: [...reader.currentStroke],
+          color: reader.penColor,
+          size: reader.penSize,
+          eraser: reader.tool === 'eraser',
+          id: Date.now()
+        });
+        await savePageAnnotations(reader.bookId, page);
+        drawAnnotations(page);
+        renderAllAnnotList();
+      }
+      reader.currentStroke = [];
+    }
+  };
+
+  // Mouse events
+  canvas.addEventListener('mousedown', onDown);
+  canvas.addEventListener('mousemove', onMove);
+  canvas.addEventListener('mouseup', onUp);
+  // Touch events
+  canvas.addEventListener('touchstart', onDown, {passive: false});
+  canvas.addEventListener('touchmove', onMove, {passive: false});
+  canvas.addEventListener('touchend', onUp);
+}
+
+// ── Note popup ─────────────────────────────────────────────────────
+function showNotePopup(canvasX, canvasY, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const popup = document.getElementById('note-popup');
+  // Position popup near the tap point, staying in viewport
+  const px = Math.min(rect.left + canvasX, window.innerWidth - 240);
+  const py = Math.min(rect.top + canvasY + 20, window.innerHeight - 160);
+  popup.style.left = px + 'px';
+  popup.style.top = py + 'px';
+  popup.style.position = 'fixed';
+  document.getElementById('note-text').value = '';
+  popup.classList.add('show');
+  setTimeout(() => document.getElementById('note-text').focus(), 100);
+}
+
+document.getElementById('note-cancel').addEventListener('click', () => {
+  document.getElementById('note-popup').classList.remove('show');
+  _pendingNote = null;
+});
+
+document.getElementById('note-save').addEventListener('click', async () => {
+  if (!_pendingNote) return;
+  const text = document.getElementById('note-text').value.trim();
+  if (!text) { document.getElementById('note-popup').classList.remove('show'); return; }
+  const {x, y, page} = _pendingNote;
+  const annots = reader.annotations[page] || {highlights:[], strokes:[], notes:[]};
+  reader.annotations[page] = annots;
+  annots.notes.push({x, y, text, id: Date.now()});
+  await savePageAnnotations(reader.bookId, page);
+  drawAnnotations(page);
+  renderAllAnnotList();
+  document.getElementById('note-popup').classList.remove('show');
+  _pendingNote = null;
+  toast('Note saved');
+});
+
+// ── Annotations panel ──────────────────────────────────────────────
+async function renderAllAnnotList() {
+  const el = document.getElementById('annot-list');
+  // Gather all annotations across all loaded pages
+  const allAnnots = await idbGetAll(IDB_ANNOTS);
+  const bookAnnots = allAnnots.filter(a => a.key.startsWith(reader.bookId + ':'));
+  if (!bookAnnots.length) {
+    el.innerHTML = '<div style="padding:16px;color:rgba(255,255,255,.3);font-size:.78rem;text-align:center">No annotations yet.<br>Use the highlight or pen tools.</div>';
+    return;
+  }
+  let html = '';
+  bookAnnots.sort((a,b) => {
+    const pa = parseInt(a.key.split(':')[1])||0;
+    const pb = parseInt(b.key.split(':')[1])||0;
+    return pa - pb;
+  }).forEach(rec => {
+    const page = parseInt(rec.key.split(':')[1]) || 0;
+    const d = rec.data;
+    const hCount = d.highlights?.length || 0;
+    const sCount = d.strokes?.length || 0;
+    const nCount = d.notes?.length || 0;
+    if (!hCount && !sCount && !nCount) return;
+    html += `<div class="annot-item" onclick="goToPage(${page})" style="border-left-color:var(--amber)">
+      <div class="annot-item-page">Page ${page}</div>
+      <div class="annot-item-text">`;
+    if (hCount) html += `🟡 ${hCount} highlight${hCount>1?'s':''} `;
+    if (sCount) html += `✏️ ${sCount} stroke${sCount>1?'s':''} `;
+    if (nCount) html += `📝 ${nCount} note${nCount>1?'s':''}`;
+    // Show note texts
+    d.notes?.forEach((n,i) => {
+      html += `<div style="margin-top:5px;padding:4px 6px;background:rgba(255,214,0,.12);border-radius:4px;font-size:.72rem">${i+1}. ${escH(n.text.slice(0,80))}${n.text.length>80?'…':''}</div>`;
+    });
+    html += `</div></div>`;
+  });
+  el.innerHTML = html || '<div style="padding:16px;color:rgba(255,255,255,.3);font-size:.78rem;text-align:center">No annotations yet.</div>';
+}
+
+function goToPage(p) {
+  reader.currentPage = p;
+  renderReaderPage(p);
+}
+
+// ── Tool controls ──────────────────────────────────────────────────
+const TOOLS = ['select','highlight','pen','eraser','note'];
+TOOLS.forEach(t => {
+  document.getElementById('tool-' + t).addEventListener('click', () => {
+    reader.tool = t;
+    TOOLS.forEach(x => document.getElementById('tool-' + x).classList.toggle('active', x === t));
+    // Update cursor on active canvas
+    const pc = reader.pageContainers[reader.currentPage];
+    if (pc) pc.annotCanvas.className = 'annot-canvas tool-' + t;
+  });
+});
+
+document.querySelectorAll('.color-swatch[data-color]').forEach(sw => {
+  sw.addEventListener('click', () => {
+    reader.hlColor = sw.dataset.color;
+    document.querySelectorAll('.color-swatch[data-color]').forEach(s => s.classList.remove('active'));
+    sw.classList.add('active');
+    reader.tool = 'highlight';
+    TOOLS.forEach(x => document.getElementById('tool-' + x).classList.toggle('active', x === 'highlight'));
+  });
+});
+
+document.querySelectorAll('.color-swatch[data-pen-color]').forEach(sw => {
+  sw.addEventListener('click', () => {
+    reader.penColor = sw.dataset.penColor;
+    document.querySelectorAll('.color-swatch[data-pen-color]').forEach(s => s.classList.remove('active'));
+    sw.classList.add('active');
+    reader.tool = 'pen';
+    TOOLS.forEach(x => document.getElementById('tool-' + x).classList.toggle('active', x === 'pen'));
+  });
+});
+
+document.querySelectorAll('.size-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    reader.penSize = parseInt(btn.dataset.size);
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+document.getElementById('clear-page-btn').addEventListener('click', async () => {
+  if (!reader.bookId) return;
+  if (!confirm('Clear all annotations on this page?')) return;
+  reader.annotations[reader.currentPage] = {highlights:[], strokes:[], notes:[]};
+  await savePageAnnotations(reader.bookId, reader.currentPage);
+  drawAnnotations(reader.currentPage);
+  renderAllAnnotList();
+  toast('Page cleared');
+});
+
+// ── Navigation ─────────────────────────────────────────────────────
+document.getElementById('r-prev').addEventListener('click', () => {
+  if (reader.currentPage > 1) renderReaderPage(reader.currentPage - 1);
+});
+document.getElementById('r-next').addEventListener('click', () => {
+  if (reader.currentPage < reader.totalPages) renderReaderPage(reader.currentPage + 1);
+});
+document.getElementById('r-page-input').addEventListener('change', function() {
+  const p = parseInt(this.value);
+  if (p >= 1 && p <= reader.totalPages) renderReaderPage(p);
+});
+
+// Keyboard navigation
+window.addEventListener('keydown', e => {
+  if (curPage !== 'reader') return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    if (reader.currentPage < reader.totalPages) renderReaderPage(reader.currentPage + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    if (reader.currentPage > 1) renderReaderPage(reader.currentPage - 1);
+  }
+});
+
+// Zoom
+function updateZoomLabel() {
+  document.getElementById('r-zoom-label').textContent = Math.round(reader.zoom * 100) + '%';
+}
+document.getElementById('r-zoom-in').addEventListener('click', () => {
+  reader.zoom = Math.min(3.0, reader.zoom + 0.2);
+  updateZoomLabel();
+  renderReaderPage(reader.currentPage);
+});
+document.getElementById('r-zoom-out').addEventListener('click', () => {
+  reader.zoom = Math.max(0.4, reader.zoom - 0.2);
+  updateZoomLabel();
+  renderReaderPage(reader.currentPage);
+});
+
+// Back to library
+document.getElementById('r-back-btn').addEventListener('click', () => {
+  reader.pdfDoc = null;
+  navigateTo('library');
+});
+
+// Annotation panel toggle
+document.getElementById('r-annot-toggle').addEventListener('click', () => {
+  const panel = document.getElementById('annot-panel');
+  panel.classList.toggle('collapsed');
+  if (!panel.classList.contains('collapsed')) renderAllAnnotList();
+});
+document.getElementById('annot-close-btn').addEventListener('click', () => {
+  document.getElementById('annot-panel').classList.add('collapsed');
+});
+
+// Thumb strip toggle
+document.getElementById('r-thumb-toggle').addEventListener('click', async () => {
+  const strip = document.getElementById('thumb-strip');
+  strip.classList.toggle('hidden');
+  if (!strip.classList.contains('hidden') && !reader.thumbsRendered) {
+    await renderThumbs();
+  }
+});
+
+async function renderThumbs() {
+  if (!reader.pdfDoc) return;
+  reader.thumbsRendered = true;
+  const strip = document.getElementById('thumb-strip');
+  strip.innerHTML = '';
+  const total = Math.min(reader.totalPages, 50); // cap at 50 thumbs
+  for (let i = 1; i <= total; i++) {
+    const item = document.createElement('div');
+    item.className = 'thumb-item' + (i === reader.currentPage ? ' active' : '');
+    item.dataset.page = i;
+    const tc = document.createElement('canvas');
+    item.appendChild(tc);
+    const pn = document.createElement('div');
+    pn.className = 'thumb-page-num';
+    pn.textContent = i;
+    item.appendChild(pn);
+    item.addEventListener('click', () => renderReaderPage(i));
+    strip.appendChild(item);
+
+    // Render thumb async
+    (async pg => {
+      try {
+        const page = await reader.pdfDoc.getPage(pg);
+        const vp = page.getViewport({scale: 0.2});
+        tc.width = vp.width; tc.height = vp.height;
+        await page.render({canvasContext: tc.getContext('2d'), viewport: vp}).promise;
+      } catch(e) {}
+    })(i);
+  }
+}
+
+// ── Nav helper ─────────────────────────────────────────────────────
+function navigateTo(pageId) {
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.page === pageId);
+  });
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.toggle('active', p.id === 'page-' + pageId);
+  });
+  curPage = pageId;
+  if (pageId === 'library') renderLibrary();
+  if (pageId === 'plan')    renderPlan();
+  if (pageId === 'dashboard') renderDashboard();
+  if (pageId === 'kw')     renderKW();
+  if (pageId === 'io')     updateStorageInfo();
+}
+
+// Hook nav tabs for library + reader
+document.querySelectorAll('.nav-tab').forEach(t => {
+  if (t.dataset.page === 'library') {
+    t.addEventListener('click', () => navigateTo('library'));
+  }
+});
+
+// Init library
+renderLibrary();
+
 </script>
 </body>
 </html>
